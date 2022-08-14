@@ -1,6 +1,7 @@
-import requests
 from rest_framework.serializers import ModelSerializer, SerializerMethodField, ValidationError, ListField, FileField
-from django.conf.global_settings import AUTH_USER_MODEL
+from django.contrib.auth import get_user_model
+
+from ecommerce_api.settings import AUTH_USER_MODEL
 from .models import Product, ImageProduct, Category, Order, Cart
 
 
@@ -66,17 +67,24 @@ class OrderSerializer(ModelSerializer):
         fields = '__all__'
 
 
-class CartSerializer(ModelSerializer):
-    orders = OrderSerializer()
+class CartListSerializer(ModelSerializer):
+    orders = OrderSerializer(many=True)
 
     class Meta:
         model = Cart
-        fields = ['user', 'orders']
+        fields = ['user', 'orders', 'ordered']
+
+
+class CartDetailSerializer(ModelSerializer):
+    orders = OrderSerializer(many=True)
+
+    class Meta:
+        model = Cart
+        fields = '__all__'
 
 
 class UserSerializer(ModelSerializer):
-    cart = CartSerializer()
 
     class Meta:
-        model = AUTH_USER_MODEL
-        fields = '__all__'
+        model = get_user_model()
+        exclude = ('password', )

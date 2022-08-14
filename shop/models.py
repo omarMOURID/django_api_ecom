@@ -1,6 +1,9 @@
-from django.conf.global_settings import AUTH_USER_MODEL
+import datetime
+
 from django.db import models, transaction
 from requests import request
+
+from ecommerce_api.settings import AUTH_USER_MODEL
 
 
 class Category(models.Model):
@@ -53,3 +56,15 @@ class Cart(models.Model):
     user = models.ForeignKey(AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='cart')
     ordered = models.BooleanField(default=False)
     ordered_date = models.DateTimeField(blank=True, null=True)
+
+    def __str__(self):
+        return self.user.usename + self.id
+
+    @transaction.atomic
+    def make_ordered(self):
+        if self.ordered:
+            return
+        self.ordered = True
+        self.ordered_date = datetime.datetime.now()
+        self.orders.update(ordered=True)
+        self.save()

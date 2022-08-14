@@ -32,15 +32,19 @@ router = routers.SimpleRouter()
 
 router.register('admin/category', CategoryAdminViewset, basename='admin-category')
 router.register('admin/product', ProductAdminViewset, basename='admin-product')
+router.register('admin/cart', CategoryAdminViewset, basename='admin-cart')
+router.register('admin/user', UserAdminViewset, basename='admin-user')
 router.register('category', CategoryUserViewset, basename='category')
 router.register('product', ProductUserViewset, basename='product')
+router.register('user/order', OrderUserViewSet, basename='order')
+router.register('user/cart', CartUserViewSet, basename='cart')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api-auth/', include('rest_framework.urls')),
     path('api/token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     path('api/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
-    path('api/', include(router.urls)),  # il faut bien penser à ajouter les urls du router dans la
+    path('api/', include(router.urls)),
 ]
 
 if settings.DEBUG:
