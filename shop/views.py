@@ -120,6 +120,7 @@ class CartAdminViewset(MultipleSerializerMixin, ModelViewSet):
 
 class UserAdminViewset(ModelViewSet):
     serializer_class = UserSerializer
+    permission_classes = [IsAdminAuthenticated]
 
     def get_queryset(self):
         user_model = get_user_model()
